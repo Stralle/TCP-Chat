@@ -41,18 +41,20 @@ public class Client implements Comparable<Client> {
 		out_socket = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()), true);
 		scanner = new Scanner(System.in);
 		
+	
 		//TODO: Client should type his name first.
 		serverMessage = "[S]: Please type your name:";
 		System.out.println(serverMessage);
 		clientMessage = scanner.nextLine();
 		this.setClientName(clientMessage);
-		out_socket.println(clientMessage);
+			//register client with selected name
+		out_socket.println("register§"+clientMessage);
 		
 		//TODO: Client reads server's welcome message.
 		
 		serverMessage = in_socket.readLine();
 		System.out.println("[S]: " + serverMessage);
-		
+
 		
 //		while(true) {
 //			
