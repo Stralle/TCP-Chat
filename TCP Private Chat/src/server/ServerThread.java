@@ -50,10 +50,10 @@ public class ServerThread extends Thread{
 				
 				clientMessage = in_socket.readLine();
 				if(clientMessage==null ||  clientMessage.isEmpty())
-					break;
+					continue;
 				
 				if(clientMessage.equalsIgnoreCase("!quit")) {
-						break;				
+					break;				
 				}	
 				
 				
@@ -109,6 +109,7 @@ public class ServerThread extends Thread{
 	private void closeConnections() throws IOException {
 		System.out.println("Client " + client.getSocket().getInetAddress().getHostAddress() + " has disconnected.");
 		in_socket.close();
+		
 		//treba zatvoriti RequestHandler, jos ne znam kako
 	}
 
@@ -120,6 +121,16 @@ public class ServerThread extends Thread{
 
 	public void setHelpMessage(String helpMessage) {
 		this.helpMessage = helpMessage;
+	}
+
+
+	public String getServerMessage() {
+		return serverMessage;
+	}
+
+
+	public void setServerMessage(String serverMessage) {
+		this.serverMessage = serverMessage;
 	}
 
 }

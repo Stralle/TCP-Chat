@@ -9,6 +9,8 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Scanner;
 
+import gui.View;
+
 /**
  * Client's class. Used for communication with other clients and server.
  * @author Strahinja
@@ -30,7 +32,10 @@ public class Client implements Comparable<Client> {
 	
 	private String clientName;
 	
+	private View view;
+	
 	public Client() throws UnknownHostException, IOException {
+		view = new View();
 		socket = new Socket(address, port);
 		System.out.println(serverMessage);
 		
@@ -80,10 +85,6 @@ public class Client implements Comparable<Client> {
 		out_socket.close();
 		scanner.close();
 	}
-	
-	public static void main(String[] args) throws UnknownHostException, IOException {
-		new Client();
-	}
 
 	public String getClientName() {
 		return clientName;
@@ -101,4 +102,10 @@ public class Client implements Comparable<Client> {
 		}
 		return 0;
 	}
+	
+	
+	public static void main(String[] args) throws UnknownHostException, IOException {
+		new Client();
+	}
+	
 }
