@@ -42,8 +42,26 @@ public class RequestHandler {
 		out_socket.close();
 	}
 	
-	public void sendMessage(Request request) {
-		//TODO: to be implemented
+	public void sendMessage(Request request) throws IOException {
+		String[] split = request.getData().split("->");
+		
+		if(split.length<2){
+			notImplemented();
+			return;
+		}
+		
+		String imeKlijenta = split[0];
+		String poruka = split[1];
+		
+		Client destinacioniKlijent = ClientDao.getInstance().findByName(imeKlijenta);
+		
+		if(destinacioniKlijent==null){
+			out_socket.println("Klijent sa tim imenom nije online!");
+			return;
+		}
+		
+		PrintWriter pw = out_socket = new PrintWriter(new OutputStreamWriter(client.getSocket().getOutputStream()), true);
+		pw.println(poruka);
 	}
 	
 	public void whoIsOnline(Request request) {

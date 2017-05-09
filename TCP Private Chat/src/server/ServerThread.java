@@ -87,6 +87,9 @@ public class ServerThread extends Thread{
 					case "whoIsOnline":
 							rh.whoIsOnline(request);
 						break;
+					case "sendMessage":
+							rh.sendMessage(request);
+						break;
 					default:
 							rh.notImplemented();
 						break;

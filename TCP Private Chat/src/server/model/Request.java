@@ -2,7 +2,7 @@ package server.model;
 
 public class Request {
 	private String action;
-	private Object data = null;
+	private String data = null;
 	
 	
 	public Request(String action) {
@@ -14,10 +14,10 @@ public class Request {
 	public void setAction(String action) {
 		this.action = action;
 	}
-	public Object getData() {
+	public String getData() {
 		return data;
 	}
-	public void setData(Object data) {
+	public void setData(String data) {
 		this.data = data;
 	}
 	@Override

@@ -60,10 +60,9 @@ public class Client implements Comparable<Client> {
 		serverMessage = in_socket.readLine();
 		System.out.println("[S]: " + serverMessage);
 
-		clientMessage = scanner.nextLine();
-		out_socket.println(clientMessage+"§");
-		serverMessage = in_socket.readLine();
-		System.out.println("[S]: " + serverMessage);
+		out_socket.println("sendMessage"+"§vuk->cao cao");
+		
+		System.out.println("[S]: " + in_socket.readLine());
 //		while(true) {
 //			
 //			
