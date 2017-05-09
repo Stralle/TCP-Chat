@@ -60,7 +60,7 @@ public class RequestHandler {
 			return;
 		}
 		
-		PrintWriter pw = out_socket = new PrintWriter(new OutputStreamWriter(client.getSocket().getOutputStream()), true);
+		PrintWriter pw  = new PrintWriter(new OutputStreamWriter(client.getSocket().getOutputStream()), true);
 		pw.println(poruka);
 	}
 	
