@@ -7,6 +7,8 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 import gui.View;
@@ -60,20 +62,35 @@ public class Client implements Comparable<Client> {
 		serverMessage = in_socket.readLine();
 		System.out.println("[S]: " + serverMessage);
 
-		out_socket.println("sendMessage"+"§vuk->cao cao");
+		Thread osveziListuOnlineKlijenata = new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				out_socket.println("whoIsOnline§");
+				try {
+					view.refreshList(new ArrayList<>(Arrays.asList(in_socket.readLine().split(";"))));
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
+
 		
-		System.out.println("[S]: " + in_socket.readLine());
-//		while(true) {
-//			
-//			
-//			
-//			if(clientMessage.equalsIgnoreCase("!quit")) {
-//				break;
-//			}
-//			
-//			
-//			
-//		}
+		while(true) {
+						
+			if(clientMessage.equalsIgnoreCase("!quit")) {
+				break;
+			}
+			
+			osveziListuOnlineKlijenata.run();
+			try {
+				osveziListuOnlineKlijenata.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		
 		
 		

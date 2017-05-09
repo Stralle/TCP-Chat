@@ -3,6 +3,7 @@ package gui;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.util.List;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -122,6 +123,17 @@ public class View extends JFrame {
 		add(rightPanel, BorderLayout.EAST);
 		
 		this.setVisible(true);
+	}
+	
+	public void refreshList(List<String> onlineClients){
+		listModel.removeAllElements();
+		
+		if(onlineClients==null || onlineClients.isEmpty())
+			return;
+		
+		for (String string : onlineClients) {
+			listModel.addElement(string);
+		}
 	}
 	
 	public void initialiseLookAndFeel() {
