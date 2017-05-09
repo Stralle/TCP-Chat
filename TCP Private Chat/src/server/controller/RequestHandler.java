@@ -23,9 +23,8 @@ public class RequestHandler {
 		out_socket = new PrintWriter(new OutputStreamWriter(client.getSocket().getOutputStream()), true);
 	}
 	
-	public void register(Request request) {
+	public void rename(Request request) {
 		client.setName(request.getData().toString());
-		out_socket.println("Welcome " +request.getData().toString() + " to our chat. For help type: \'!help\'");
 	}
 	
 	public void notImplemented() {
@@ -55,13 +54,15 @@ public class RequestHandler {
 		
 		Client destinacioniKlijent = ClientDao.getInstance().findByName(imeKlijenta);
 		
-		if(destinacioniKlijent==null){
+		if(destinacioniKlijent == null){
 			out_socket.println("Klijent sa tim imenom nije online!");
 			return;
 		}
 		
-		PrintWriter pw  = new PrintWriter(new OutputStreamWriter(client.getSocket().getOutputStream()), true);
-		pw.println(poruka);
+		PrintWriter pw = new PrintWriter(new OutputStreamWriter(client.getSocket().getOutputStream()), true);
+		pw.println(client.getName() + "§" + poruka);
+		
+		out_socket.println("Poruka poslata " + destinacioniKlijent);
 	}
 	
 	public void whoIsOnline(Request request) {

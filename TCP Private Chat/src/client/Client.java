@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
+import client.controller.RenameListener;
+import client.controller.SendListener;
 import gui.View;
 
 /**
@@ -27,10 +29,9 @@ public class Client implements Comparable<Client> {
 	
 	private BufferedReader in_socket;
 	private PrintWriter out_socket;
-	private Scanner scanner;
 	
 	private String serverMessage = "You succesfully connected to the server.";
-	private String clientMessage;
+	private String clientMessage = "a";
 	
 	private String clientName;
 	
@@ -46,22 +47,17 @@ public class Client implements Comparable<Client> {
 		 */
 		in_socket = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 		out_socket = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()), true);
-		scanner = new Scanner(System.in);
 		
 	
 		//TODO: Client should type his name first.
-		serverMessage = "[S]: Please type your name:";
-		System.out.println(serverMessage);
-		clientMessage = scanner.nextLine();
-		this.setClientName(clientMessage);
-			//register client with selected name
-		out_socket.println("register§"+clientMessage);
-	
 		//TODO: Client reads server's welcome message.
-		
-		serverMessage = in_socket.readLine();
-		System.out.println("[S]: " + serverMessage);
 
+		RenameListener renameListener = new RenameListener(view.getTextFieldName(), out_socket);
+		view.getBtnRename().addActionListener(renameListener);
+		
+		SendListener sendListener = new SendListener(view.getTextFieldMessage(), out_socket, view.getListClients());
+		view.getBtnSend().addActionListener(sendListener);
+		
 		Thread osveziListuOnlineKlijenata = new Thread(new Runnable() {
 			
 			@Override
@@ -69,6 +65,23 @@ public class Client implements Comparable<Client> {
 				out_socket.println("whoIsOnline§");
 				try {
 					view.refreshList(new ArrayList<>(Arrays.asList(in_socket.readLine().split(";"))));
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
+		
+		Thread osveziPoruke = new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				try {
+					String message = in_socket.readLine();
+					if(message != null) {
+						message.replace("§", ": ");
+						view.refreshMessages(message);
+					}
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -83,9 +96,17 @@ public class Client implements Comparable<Client> {
 				break;
 			}
 			
-			osveziListuOnlineKlijenata.run();
+			osveziListuOnlineKlijenata.start();
 			try {
 				osveziListuOnlineKlijenata.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			osveziPoruke.start();
+			try {
+				osveziPoruke.sleep(1020);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -102,7 +123,6 @@ public class Client implements Comparable<Client> {
 		socket.close();
 		in_socket.close();
 		out_socket.close();
-		scanner.close();
 	}
 
 	public String getClientName() {

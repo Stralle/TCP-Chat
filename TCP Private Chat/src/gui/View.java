@@ -65,22 +65,7 @@ public class View extends JFrame {
 		/**
 		 * Loading data
 		 */
-		listModel.addElement("USA");
-        listModel.addElement("India");
-        listModel.addElement("Vietnam");
-        listModel.addElement("Canada");
-        listModel.addElement("Denmark");
-        listModel.addElement("France");
-        listModel.addElement("Great Britain");
-        listModel.addElement("Japan");
-        listModel.addElement("USA");
-        listModel.addElement("India");
-        listModel.addElement("Vietnam");
-        listModel.addElement("Canada");
-        listModel.addElement("Denmark");
-        listModel.addElement("France");
-        listModel.addElement("Great Britain");
-        listModel.addElement("Japan");
+		
 		listClients = new JList<>(listModel);
         
 		
@@ -134,6 +119,10 @@ public class View extends JFrame {
 		for (String string : onlineClients) {
 			listModel.addElement(string);
 		}
+	}
+	
+	public void refreshMessages(String message) {
+		this.getTextAreaMessages().append(message + "\n");
 	}
 	
 	public void initialiseLookAndFeel() {
@@ -254,5 +243,6 @@ public class View extends JFrame {
 	public void setListModel(DefaultListModel<String> listModel) {
 		this.listModel = listModel;
 	}
+
 	
 }

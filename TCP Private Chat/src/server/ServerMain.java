@@ -34,8 +34,6 @@ public class ServerMain {
 			
 			ServerThread server_thread = new ServerThread(client);
 			server_thread.start();
-			//Thread thread = new Thread(server_thread);
-			//thread.run(); 										//TODO: Check if here should be start() instead of run().
 			
 		}
 		

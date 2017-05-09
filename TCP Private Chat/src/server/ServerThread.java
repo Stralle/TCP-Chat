@@ -57,7 +57,7 @@ public class ServerThread extends Thread{
 				
 				/*
 				 * Svaki request sadrzi § koja razdvaja potrebnu akciju od podataka
-				 * primer: register§Vuk govori serveru da klijentu koji salje request postavi ime vuk
+				 * primer: rename§Vuk govori serveru da klijentu koji salje request postavi ime vuk
 				 * primer2: send§Vuk§Cao, sta ima? govori serveru da treba da posalje poruku Vuku od klijenta koji je poslao poruku
 				 * primer3: help@ korisnik je zatrazio help, bez ikakvih podataka samo akcija help
 				 */
@@ -78,8 +78,8 @@ public class ServerThread extends Thread{
 					//call handler for this request 
 				switch (request.getAction()) {
 					
-					case "register":
-							rh.register(request);
+					case "rename":
+							rh.rename(request);
 						break;
 					case "help":
 							rh.help(request);
