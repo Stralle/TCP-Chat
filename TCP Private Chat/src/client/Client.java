@@ -54,13 +54,16 @@ public class Client implements Comparable<Client> {
 		this.setClientName(clientMessage);
 			//register client with selected name
 		out_socket.println("register§"+clientMessage);
-		
+	
 		//TODO: Client reads server's welcome message.
 		
 		serverMessage = in_socket.readLine();
 		System.out.println("[S]: " + serverMessage);
 
-		
+		clientMessage = scanner.nextLine();
+		out_socket.println(clientMessage+"§");
+		serverMessage = in_socket.readLine();
+		System.out.println("[S]: " + serverMessage);
 //		while(true) {
 //			
 //			

@@ -35,6 +35,7 @@ public class ClientDao {
 	public Client findByName (String name){
 		return getClientList().get(name);
 	}
+	
 	public Map<String,Client> getClientList() {
 		return clientList;
 	}

@@ -3,9 +3,13 @@ package server.controller;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import server.model.Client;
 import server.model.Request;
+import server.repository.ClientDao;
 
 public class RequestHandler {
 	private PrintWriter out_socket;
@@ -43,7 +47,18 @@ public class RequestHandler {
 	}
 	
 	public void whoIsOnline(Request request) {
-		//TODO: to be implemented
+		ClientDao c = ClientDao.getInstance();
+		
+		List<Client> lista = new ArrayList<>(c.getClientList().values());
+		
+		String response = "";
+		if(lista!=null && !lista.isEmpty()){
+			for (Client client : lista) {
+				response+=client.getName()+";";
+			}
+		}
+		
+		out_socket.println(response);
 	}
 	
 	

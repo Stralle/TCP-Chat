@@ -8,8 +8,6 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-import org.codehaus.jackson.map.ObjectMapper;
-
 import server.controller.RequestHandler;
 import server.model.Client;
 import server.model.Request;
@@ -86,7 +84,9 @@ public class ServerThread extends Thread{
 					case "help":
 							rh.help(request);
 						break;
-	
+					case "whoIsOnline":
+							rh.whoIsOnline(request);
+						break;
 					default:
 							rh.notImplemented();
 						break;
