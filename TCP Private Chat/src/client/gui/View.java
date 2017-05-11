@@ -1,4 +1,4 @@
-package gui;
+package client.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -16,6 +16,7 @@ import javax.swing.JTextField;
 import javax.swing.ListModel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import javax.swing.text.DefaultCaret;
 
 /**
  * 
@@ -75,7 +76,12 @@ public class View extends JFrame {
 		 */
 		textAreaMessages.setEditable(false);
 		textAreaMessages.setSize(new Dimension(1920, 300));
-		scrollPaneMessages.add(textAreaMessages);
+		textAreaMessages.setLineWrap(true);
+		DefaultCaret caret = (DefaultCaret)textAreaMessages.getCaret();
+		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+		
+		scrollPaneMessages = new JScrollPane(textAreaMessages);
+		scrollPaneMessages.setAutoscrolls(true);
 		leftPanel.setLayout(new BorderLayout());
 		leftPanel.add(scrollPaneMessages, BorderLayout.CENTER);
 		
@@ -93,16 +99,21 @@ public class View extends JFrame {
 		 */
 		rightPanel.setLayout(new BorderLayout());
 		topPanel.setLayout(new BorderLayout());
-		textFieldMessage.setSize(topPanel.getWidth(), 50);
+		textFieldName.setSize(topPanel.getWidth(), 50);
 		textFieldName.setToolTipText("Change your name here");
 		topPanel.add(textFieldName, BorderLayout.NORTH);
 		topPanel.add(btnRename, BorderLayout.SOUTH);
 		rightPanel.add(topPanel, BorderLayout.NORTH);
+		rightPanel.setSize(new Dimension(50, 200));
 		/**
 		 * Need to set listClients.
 		 * 
 		 */
+		listClients.setSize(50, 200);
+		listClients.setMaximumSize(new Dimension(50, 200));
 		scrollPaneClients = new JScrollPane(listClients);
+		scrollPaneClients.setMaximumSize(new Dimension(50, 200));
+		rightPanel.setMaximumSize(new Dimension(50, 200));
 		rightPanel.add(scrollPaneClients, BorderLayout.CENTER);
 		
 		
@@ -128,11 +139,12 @@ public class View extends JFrame {
 		if(selektovani!=null){
 			listClients.setSelectedIndices(selektovani);
 		}
+		this.repaint();
 	}
 	
 	public void refreshMessages(String message) {
-		System.out.println("message");
 		this.getTextAreaMessages().append(message + "\n");
+		this.repaint();
 	}
 	
 	public void initialiseLookAndFeel() {

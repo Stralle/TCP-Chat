@@ -8,7 +8,7 @@ import javax.swing.JList;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import gui.View;
+import client.gui.View;
 
 public class SendListener implements ActionListener {
 
@@ -17,8 +17,10 @@ public class SendListener implements ActionListener {
 	private JList<String> listClients;
 	private JTextField textFieldMessage;
 	private JTextArea textAreaMessages;
+	private View view;
 	
 	public SendListener(View view, PrintWriter pw) {
+		this.setView(view);
 		this.setListClients(view.getListClients());
 		this.setTextFieldMessage(view.getTextFieldMessage());
 		this.setTextAreaMessages(view.getTextAreaMessages());
@@ -30,11 +32,23 @@ public class SendListener implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		
-		if(getListClients().getSelectedValuesList().isEmpty()) {
-			this.getTextAreaMessages().append("Morate da izaberete primaoca." + "\n");
+		if(this.getTextFieldMessage().getText().equalsIgnoreCase("!help")) {
+			pw.println("help§");
+			return;
 		}
+		
+		if(this.getTextFieldMessage().getText().equalsIgnoreCase("!quit")) {
+			pw.println("quit§");
+			System.exit(0);
+			return;
+		}
+		
+		if(getListClients().getSelectedValuesList().isEmpty()) {
+			this.getTextAreaMessages().append("Choose a receiver" + "\n");
+		}
+		
 		else {
-			this.getTextAreaMessages().append("Ja: " + this.getTextFieldMessage().getText() + "\n");
+			this.getTextAreaMessages().append("Me: " + this.getTextFieldMessage().getText() + "\n");
 			
 			for (String string : listClients.getSelectedValuesList()) {
 				pw.println("sendMessage§"+string+"->"+textFieldMessage.getText());
@@ -76,6 +90,16 @@ public class SendListener implements ActionListener {
 
 	public void setTextAreaMessages(JTextArea textAreaMessages) {
 		this.textAreaMessages = textAreaMessages;
+	}
+
+
+	public View getView() {
+		return view;
+	}
+
+
+	public void setView(View view2) {
+		this.view = view2;
 	}
 
 	

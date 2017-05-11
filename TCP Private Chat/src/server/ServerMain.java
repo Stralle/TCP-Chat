@@ -24,8 +24,7 @@ public class ServerMain {
 		System.out.println("Server opened at port " + port);
 		
 		while(true) {
-			Socket socket = server_socket.accept(); 
-			System.out.println("stigao soket");
+			Socket socket = server_socket.accept();
 			ClientThread client_thread = new ClientThread(clientNextID++, socket);
 			
 			clientRepository.addClient(client_thread);

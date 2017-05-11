@@ -29,31 +29,26 @@ public class ClientThread extends Thread{
 	public ClientThread(int id, Socket socket) throws IOException {
 		this.setName("unnamed" + id);
 		setOut_socket(new PrintWriter(new OutputStreamWriter(socket.getOutputStream()), true));
-		this.socket = socket;
+		this.setSocket(socket);
 	}
 
 	
 	public void run() {
 		// TODO Auto-generated method stub
 		try {
-			in_socket = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			in_socket = new BufferedReader(new InputStreamReader(getSocket().getInputStream()));
 	
 			//TODO: Server receives a client's name first.
 			
-			
 			RequestHandler rh = new RequestHandler(this);
+			rh.help(null);
+			
 			boolean loop = true;
 			while(loop) {
 				
 				clientMessage = in_socket.readLine();
 				if(clientMessage == null ||  clientMessage.isEmpty())
 					continue;
-				
-				System.out.println("Poruka klijenta " + clientMessage);
-				
-				if(clientMessage.equalsIgnoreCase("!quit")) {
-					break;				
-				}	
 				
 				
 				/*
@@ -80,20 +75,27 @@ public class ClientThread extends Thread{
 				switch (request.getAction()) {
 					
 					case "rename":
-							rh.rename(request);
+						rh.rename(request);
 						break;
 					case "help":
-							rh.help(request);
+						rh.help(request);
 						break;
 					case "whoIsOnline":
-							rh.whoIsOnline(request);
+						rh.whoIsOnline(request);
 						break;
 					case "sendMessage":
-							rh.sendMessage(request);
+						rh.sendMessage(request);
+						break;
+					case "quit":
+						rh.quit(request);
 						break;
 					default:
-							rh.notImplemented();
+						rh.notImplemented();
 						break;
+				}
+				
+				if(request.getAction().equals("quit")) {
+					break;
 				}
 				
 			}
@@ -149,6 +151,16 @@ public class ClientThread extends Thread{
 	@Override
 	public String toString() {
 		return this.getName();
+	}
+
+
+	public Socket getSocket() {
+		return socket;
+	}
+
+
+	public void setSocket(Socket socket) {
+		this.socket = socket;
 	}
 
 }

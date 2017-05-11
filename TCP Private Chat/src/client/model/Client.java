@@ -1,4 +1,4 @@
-package client;
+package client.model;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
 
 import client.controller.RenameListener;
 import client.controller.SendListener;
-import gui.View;
+import client.gui.View;
 
 /**
  * Client's class. Used for communication with other clients and server.
@@ -32,7 +32,6 @@ public class Client implements Comparable<Client> {
 	private BufferedReader in_socket;
 	private PrintWriter out_socket;
 	
-	private String serverMessage = "You succesfully connected to the server.";
 	private String clientMessage = "a";
 	
 	private String clientName;
@@ -42,7 +41,6 @@ public class Client implements Comparable<Client> {
 	public Client() throws UnknownHostException, IOException {
 		view = new View();
 		socket = new Socket(address, port);
-		System.out.println(serverMessage);
 		
 		/*
 		 * Initialization of I/O connectors.  
@@ -75,27 +73,24 @@ public class Client implements Comparable<Client> {
 		  public void run() {
 				try {
 					String response = in_socket.readLine();
-					System.out.println(response);
-					if(response.startsWith("message§")){
-						String message = response.split("§")[1];
-						message += ": ";
-						message += response.split("§")[2];
-						if(message != null) {
-//							message.replace("§", ":");
-//							System.out.println("Zamena " + message);
-							view.refreshMessages(message);
+					while(response != null) {
+						if(response.startsWith("message§")){
+							String message = response.split("§")[1];
+							message += ": ";
+							message += response.split("§")[2];
+							if(message != null) {
+								view.refreshMessages(message);
+							}
+						} else if (response.startsWith("whoIsOnline§")){
+							view.refreshList(new ArrayList<>(Arrays.asList(response.split("whoIsOnline§")[1].split(";"))));
+						} else if (response.startsWith("help§")){
+							String message = response.split("help§")[1];
+							if(message != null) {
+								view.refreshMessages(message);
+							}
 						}
-					} else if (response.startsWith("whoIsOnline§")){
-						System.out.println("ulaiom u online");
-						view.refreshList(new ArrayList<>(Arrays.asList(response.split("whoIsOnline§")[1].split(";"))));
-					} else if (response.startsWith("help§")){
-						String message = response.split("help§")[1];
-						if(message != null) {
-							message.replace("§", ": ");
-							view.refreshMessages(message);
-						}
+						response = in_socket.readLine();
 					}
-					
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -117,7 +112,6 @@ public class Client implements Comparable<Client> {
 	}
 	
 	private void closeConnections() throws IOException {
-		System.out.println("You have successfully disconnected from the server. Bye!");
 		socket.close();
 		in_socket.close();
 		out_socket.close();

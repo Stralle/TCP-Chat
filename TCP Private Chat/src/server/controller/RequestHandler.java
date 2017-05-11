@@ -10,9 +10,9 @@ import server.repository.ClientDao;
 
 public class RequestHandler {
 	private ClientThread client;
-	private String helpMessage =  "1. To quit from this chat type: \'!quit\'.\n"
-			+ "2. To send a message to another client type \'!clientName: message\'.\n"
-			+ "3. To check who is active type \'!active\'.\n";
+	private String helpMessage =  "1. To quit from this chat type: \'!quit\'."
+								+ "2. To send a message to another client select it from the list."
+								+ "3. For help type \'!help\'.";;
 	
 	public RequestHandler(ClientThread client) throws IOException{
 		this.setClient(client);
@@ -32,13 +32,20 @@ public class RequestHandler {
 	}
 	
 	public void help(Request request){
-		//TODO: to be implemented
 		this.getClient().getOut_socket().println("help§"+helpMessage);
 		
 	}
 
-	public void disconnect(){
-		this.getClient().getOut_socket().close();
+	public void disconnect() throws IOException {
+		this.getClient().getSocket().close();
+	}
+	
+	@SuppressWarnings("deprecation")
+	public void quit(Request request) throws IOException {
+		ClientDao.getInstance().getClientList().remove(getClient().getName());
+		this.getClient().stop();
+		disconnect();
+		
 	}
 	
 	public void sendMessage(Request request) throws IOException {
@@ -60,8 +67,6 @@ public class RequestHandler {
 		}
 		
 		destinacioniKlijent.getOut_socket().println("message§" + this.getClient().getName() + "§" + poruka);
-		System.out.println("pokusavam da posaljem:"+"message§"+destinacioniKlijent.getName() + "§" + poruka);
-		//out_socket.println("message§" + destinacioniKlijent);
 	}
 	
 	public void whoIsOnline(Request request) {
