@@ -57,7 +57,7 @@ public class Client implements Comparable<Client> {
 		RenameListener renameListener = new RenameListener(view.getTextFieldName(), out_socket);
 		view.getBtnRename().addActionListener(renameListener);
 		
-		SendListener sendListener = new SendListener(view.getTextFieldMessage(), out_socket, view.getListClients());
+		SendListener sendListener = new SendListener(view, out_socket);
 		view.getBtnSend().addActionListener(sendListener);
 		
 
@@ -77,10 +77,12 @@ public class Client implements Comparable<Client> {
 					String response = in_socket.readLine();
 					System.out.println(response);
 					if(response.startsWith("message§")){
-						String message = response.split("whoIsOnline§")[1];
-						System.out.println(message);
+						String message = response.split("§")[1];
+						message += ": ";
+						message += response.split("§")[2];
 						if(message != null) {
-							message.replace("§", ": ");
+//							message.replace("§", ":");
+//							System.out.println("Zamena " + message);
 							view.refreshMessages(message);
 						}
 					} else if (response.startsWith("whoIsOnline§")){

@@ -1,46 +1,44 @@
 package server.controller;
 
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import server.model.Client;
+import server.ClientThread;
 import server.model.Request;
 import server.repository.ClientDao;
 
 public class RequestHandler {
-	private PrintWriter out_socket;
-	private Client client;
+	private ClientThread client;
 	private String helpMessage =  "1. To quit from this chat type: \'!quit\'.\n"
 			+ "2. To send a message to another client type \'!clientName: message\'.\n"
 			+ "3. To check who is active type \'!active\'.\n";
 	
-	public RequestHandler(Client client) throws IOException{
-		this.client=client;
-		out_socket = client.getOutSocket();
+	public RequestHandler(ClientThread client) throws IOException{
+		this.setClient(client);
 	}
 	
 	public void rename(Request request) {
-		if(request==null || request.getData()==null)
+		if(request == null || request.getData() == null)
 			return;
-		client.setName(request.getData().toString());
+		ClientDao.getInstance().getClientList().remove(getClient().getName());
+		getClient().setName(request.getData().toString());
+		ClientDao.getInstance().getClientList().put(getClient().getName(), getClient());
+		
 	}
 	
 	public void notImplemented() {
-		out_socket.println("This request is not implemented yet.");
+		this.getClient().getOut_socket().println("This request is not implemented yet.");
 	}
 	
 	public void help(Request request){
 		//TODO: to be implemented
-		out_socket.println("help§"+helpMessage);
+		this.getClient().getOut_socket().println("help§"+helpMessage);
 		
 	}
 
 	public void disconnect(){
-		out_socket.close();
+		this.getClient().getOut_socket().close();
 	}
 	
 	public void sendMessage(Request request) throws IOException {
@@ -54,14 +52,14 @@ public class RequestHandler {
 		String imeKlijenta = split[0];
 		String poruka = split[1];
 		
-		Client destinacioniKlijent = ClientDao.getInstance().findByName(imeKlijenta);
+		ClientThread destinacioniKlijent = ClientDao.getInstance().findByName(imeKlijenta);
 		
 		if(destinacioniKlijent == null){
-			out_socket.println("Klijent sa tim imenom nije online!");
+			this.getClient().getOut_socket().println("Klijent sa tim imenom nije online!");
 			return;
 		}
 		
-		destinacioniKlijent.getOutSocket().println("message§"+destinacioniKlijent.getName() + "§" + poruka);
+		destinacioniKlijent.getOut_socket().println("message§" + this.getClient().getName() + "§" + poruka);
 		System.out.println("pokusavam da posaljem:"+"message§"+destinacioniKlijent.getName() + "§" + poruka);
 		//out_socket.println("message§" + destinacioniKlijent);
 	}
@@ -69,16 +67,24 @@ public class RequestHandler {
 	public void whoIsOnline(Request request) {
 		ClientDao c = ClientDao.getInstance();
 		
-		List<Client> lista = new ArrayList<>(c.getClientList().values());
+		List<ClientThread> lista = new ArrayList<>(c.getClientList().values());
 		
 		String response = "";
 		if(lista!=null && !lista.isEmpty()){
-			for (Client client : lista) {
+			for (ClientThread client : lista) {
 				response+=client.getName()+";";
 			}
 		}
 		
-		out_socket.println("whoIsOnline§"+response);
+		this.getClient().getOut_socket().println("whoIsOnline§"+response);
+	}
+
+	public ClientThread getClient() {
+		return client;
+	}
+
+	public void setClient(ClientThread client) {
+		this.client = client;
 	}
 	
 	

@@ -60,7 +60,8 @@ public class View extends JFrame {
 		this.setMaximumSize(new Dimension(screenWidth/2, screenHeight/2));
 		this.setSize(screenWidth/3, screenHeight/3);
 		this.setLocationRelativeTo(null);
-		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+//		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		
 		/**
 		 * Loading data
@@ -72,6 +73,8 @@ public class View extends JFrame {
 		/**
 		 * Left panel setting up.
 		 */
+		textAreaMessages.setEditable(false);
+		textAreaMessages.setSize(new Dimension(1920, 300));
 		scrollPaneMessages.add(textAreaMessages);
 		leftPanel.setLayout(new BorderLayout());
 		leftPanel.add(scrollPaneMessages, BorderLayout.CENTER);

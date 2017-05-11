@@ -3,10 +3,12 @@ package client.controller;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 
 import javax.swing.JList;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
+
+import gui.View;
 
 public class SendListener implements ActionListener {
 
@@ -14,10 +16,12 @@ public class SendListener implements ActionListener {
 	
 	private JList<String> listClients;
 	private JTextField textFieldMessage;
+	private JTextArea textAreaMessages;
 	
-	public SendListener(JTextField jtf, PrintWriter pw, JList<String> lc) {
-		this.setListClients(lc);
-		this.setTextFieldMessage(jtf);
+	public SendListener(View view, PrintWriter pw) {
+		this.setListClients(view.getListClients());
+		this.setTextFieldMessage(view.getTextFieldMessage());
+		this.setTextAreaMessages(view.getTextAreaMessages());
 		this.setPw(pw);
 	}
 
@@ -26,8 +30,15 @@ public class SendListener implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		
-		for (String string : listClients.getSelectedValuesList()) {
-			pw.println("sendMessage§"+string+"->"+textFieldMessage.getText());
+		if(getListClients().getSelectedValuesList().isEmpty()) {
+			this.getTextAreaMessages().append("Morate da izaberete primaoca." + "\n");
+		}
+		else {
+			this.getTextAreaMessages().append("Ja: " + this.getTextFieldMessage().getText() + "\n");
+			
+			for (String string : listClients.getSelectedValuesList()) {
+				pw.println("sendMessage§"+string+"->"+textFieldMessage.getText());
+			}
 		}
 		
 	}
@@ -55,6 +66,16 @@ public class SendListener implements ActionListener {
 
 	public void setTextFieldMessage(JTextField textFieldMessage) {
 		this.textFieldMessage = textFieldMessage;
+	}
+
+
+	public JTextArea getTextAreaMessages() {
+		return textAreaMessages;
+	}
+
+
+	public void setTextAreaMessages(JTextArea textAreaMessages) {
+		this.textAreaMessages = textAreaMessages;
 	}
 
 	

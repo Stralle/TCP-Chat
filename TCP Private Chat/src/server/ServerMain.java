@@ -1,13 +1,9 @@
 package server;
 
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import server.model.Client;
 import server.repository.ClientDao;
 
 
@@ -30,18 +26,12 @@ public class ServerMain {
 		while(true) {
 			Socket socket = server_socket.accept(); 
 			System.out.println("stigao soket");
-			PrintWriter out_socket = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()),true);
+			ClientThread client_thread = new ClientThread(clientNextID++, socket);
 			
-				//on connection create new client 
-			Client client = new Client((clientNextID++), out_socket);
-				//add client to client repository
-			clientRepository.addClient(client);
-			
-			ServerThread server_thread = new ServerThread(client, socket);
-			server_thread.start();
+			clientRepository.addClient(client_thread);
+			client_thread.start();
 			
 		}
-		
 		
 	}
 	
