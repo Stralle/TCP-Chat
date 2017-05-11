@@ -21,6 +21,7 @@ public class ServerThread extends Thread{
 	private Client client;
 	private BufferedReader in_socket;
 	private PrintWriter out_socket;
+	private Socket socket;
 	private String serverMessage;
 	private String clientMessage;
 	private String helpMessage =  "1. To quit from this chat type: \'!quit\'.\n"
@@ -28,19 +29,20 @@ public class ServerThread extends Thread{
 								+ "3. To check who is active type \'!active\'.\n";
 	
 	 // this Thread handle requests from this client
-	public ServerThread(Client client) {
+	public ServerThread(Client client, Socket socket) {
 		this.client = client;
+		out_socket = client.getOutSocket();
+		this.socket = socket;
 	}
 
 	
 	public void run() {
 		// TODO Auto-generated method stub
 		try {
-			in_socket = new BufferedReader(new InputStreamReader(client.getSocket().getInputStream()));
+			in_socket = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 	
 			//TODO: Server receives a client's name first.
 			
-			System.out.println("Client " + client.getSocket().getInetAddress().getHostAddress() + " is now connected.");
 			
 			RequestHandler rh = new RequestHandler(client);
 			boolean loop = true;
@@ -110,7 +112,6 @@ public class ServerThread extends Thread{
 
 	
 	private void closeConnections() throws IOException {
-		System.out.println("Client " + client.getSocket().getInetAddress().getHostAddress() + " has disconnected.");
 		in_socket.close();
 		
 		//treba zatvoriti RequestHandler, jos ne znam kako

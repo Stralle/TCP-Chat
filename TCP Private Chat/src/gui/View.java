@@ -111,6 +111,7 @@ public class View extends JFrame {
 	}
 	
 	public void refreshList(List<String> onlineClients){
+		int[] selektovani = listClients.getSelectedIndices();
 		listModel.removeAllElements();
 		
 		if(onlineClients==null || onlineClients.isEmpty())
@@ -119,9 +120,15 @@ public class View extends JFrame {
 		for (String string : onlineClients) {
 			listModel.addElement(string);
 		}
+		
+		
+		if(selektovani!=null){
+			listClients.setSelectedIndices(selektovani);
+		}
 	}
 	
 	public void refreshMessages(String message) {
+		System.out.println("message");
 		this.getTextAreaMessages().append(message + "\n");
 	}
 	

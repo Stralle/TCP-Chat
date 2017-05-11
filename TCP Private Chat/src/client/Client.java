@@ -9,7 +9,9 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Scanner;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import client.controller.RenameListener;
 import client.controller.SendListener;
@@ -58,37 +60,46 @@ public class Client implements Comparable<Client> {
 		SendListener sendListener = new SendListener(view.getTextFieldMessage(), out_socket, view.getListClients());
 		view.getBtnSend().addActionListener(sendListener);
 		
-		Thread osveziListuOnlineKlijenata = new Thread(new Runnable() {
-			
-			@Override
-			public void run() {
-				out_socket.println("whoIsOnline§");
-				try {
-					view.refreshList(new ArrayList<>(Arrays.asList(in_socket.readLine().split(";"))));
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		});
-		
-		Thread osveziPoruke = new Thread(new Runnable() {
-			
-			@Override
-			public void run() {
-				try {
-					String message = in_socket.readLine();
-					if(message != null) {
-						message.replace("§", ": ");
-						view.refreshMessages(message);
-					}
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		});
 
+		ScheduledExecutorService exec2 = Executors.newSingleThreadScheduledExecutor();
+		exec2.scheduleAtFixedRate(new Runnable() {
+		  @Override
+		  public void run() {
+				out_socket.println("whoIsOnline§");
+		  }
+		}, 0, 1, TimeUnit.SECONDS);
+		
+		ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
+		exec.scheduleAtFixedRate(new Runnable() {
+		  @Override
+		  public void run() {
+				try {
+					String response = in_socket.readLine();
+					System.out.println(response);
+					if(response.startsWith("message§")){
+						String message = response.split("whoIsOnline§")[1];
+						System.out.println(message);
+						if(message != null) {
+							message.replace("§", ": ");
+							view.refreshMessages(message);
+						}
+					} else if (response.startsWith("whoIsOnline§")){
+						System.out.println("ulaiom u online");
+						view.refreshList(new ArrayList<>(Arrays.asList(response.split("whoIsOnline§")[1].split(";"))));
+					} else if (response.startsWith("help§")){
+						String message = response.split("help§")[1];
+						if(message != null) {
+							message.replace("§", ": ");
+							view.refreshMessages(message);
+						}
+					}
+					
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		  }
+		}, 0, 1, TimeUnit.SECONDS);
 		
 		while(true) {
 						
@@ -96,21 +107,6 @@ public class Client implements Comparable<Client> {
 				break;
 			}
 			
-			osveziListuOnlineKlijenata.start();
-			try {
-				osveziListuOnlineKlijenata.sleep(1000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			osveziPoruke.start();
-			try {
-				osveziPoruke.sleep(1020);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		}
 		
 		

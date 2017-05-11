@@ -1,25 +1,25 @@
 package server.model;
 
+import java.io.PrintWriter;
 import java.net.Socket;
 
 
 public class Client {
-	private Socket socket;
+	private PrintWriter outSocket;
 	private String name;
 	
-	public Client(int id, Socket socket) {
-		this.socket = socket;
+	public Client(int id, PrintWriter outSocket) {
+		this.outSocket = outSocket;
 		this.name = "unnamed"+id;
 	}
 
-	public Socket getSocket() {
-		return socket;
+	public PrintWriter getOutSocket() {
+		return outSocket;
 	}
-
-	public void setSocket(Socket socket) {
-		this.socket = socket;
+	public void setOutSocket(PrintWriter outSocket) {
+		this.outSocket = outSocket;
 	}
-
+	
 	public String getName() {
 		return name;
 	}

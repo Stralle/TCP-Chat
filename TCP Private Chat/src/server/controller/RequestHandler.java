@@ -20,10 +20,12 @@ public class RequestHandler {
 	
 	public RequestHandler(Client client) throws IOException{
 		this.client=client;
-		out_socket = new PrintWriter(new OutputStreamWriter(client.getSocket().getOutputStream()), true);
+		out_socket = client.getOutSocket();
 	}
 	
 	public void rename(Request request) {
+		if(request==null || request.getData()==null)
+			return;
 		client.setName(request.getData().toString());
 	}
 	
@@ -33,7 +35,7 @@ public class RequestHandler {
 	
 	public void help(Request request){
 		//TODO: to be implemented
-		out_socket.println(helpMessage);
+		out_socket.println("help§"+helpMessage);
 		
 	}
 
@@ -59,10 +61,9 @@ public class RequestHandler {
 			return;
 		}
 		
-		PrintWriter pw = new PrintWriter(new OutputStreamWriter(client.getSocket().getOutputStream()), true);
-		pw.println(client.getName() + "§" + poruka);
-		
-		out_socket.println("Poruka poslata " + destinacioniKlijent);
+		destinacioniKlijent.getOutSocket().println("message§"+destinacioniKlijent.getName() + "§" + poruka);
+		System.out.println("pokusavam da posaljem:"+"message§"+destinacioniKlijent.getName() + "§" + poruka);
+		//out_socket.println("message§" + destinacioniKlijent);
 	}
 	
 	public void whoIsOnline(Request request) {
@@ -77,7 +78,7 @@ public class RequestHandler {
 			}
 		}
 		
-		out_socket.println(response);
+		out_socket.println("whoIsOnline§"+response);
 	}
 	
 	
